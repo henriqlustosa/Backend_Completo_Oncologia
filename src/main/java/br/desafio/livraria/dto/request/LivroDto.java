@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
@@ -31,9 +31,9 @@ public class LivroDto {
 	@PastOrPresent
 	private LocalDate dataDeLancamento;
 
-	@NotEmpty
+	
 	@Min(100)
-	private int numeroPaginas;
+	private Integer numeroPaginas;
 	
 	@Valid
 	@NotNull
