@@ -1,10 +1,8 @@
 package br.desafio.livraria.controller;
 
-
 import java.util.List;
 
 import javax.validation.Valid;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,44 +21,40 @@ import br.desafio.livraria.dto.response.MessageResponseDto;
 import br.desafio.livraria.exception.AutorNotFoundException;
 import br.desafio.livraria.service.AutorService;
 
-
-
 @RestController
 @RequestMapping("/autores")
 
 public class AutorController {
-	
 
-	
-	
 	@Autowired
 	private AutorService autorService;
-	 
+
 	@GetMapping
-	public List<AutorDto> listar()
-	{ 
+	public List<AutorDto> listar() {
 		return autorService.listAll();
-	
+
 	}
-	   @DeleteMapping("/{id}")
-	    @ResponseStatus(HttpStatus.NO_CONTENT)
-	    public void deleteById(@PathVariable Long id) throws AutorNotFoundException {
-	        autorService.delete(id);
-	    }
-	
-	 @PostMapping
-	 @ResponseStatus(HttpStatus.CREATED)
-	 public MessageResponseDto createPerson(@RequestBody @Valid AutorDto AutorDto) {
-	        return autorService.createAutor(AutorDto);
-	    }
-	 
-	 
-	  @GetMapping("/{id}")
-	    public AutorDto findById(@PathVariable Long id) throws AutorNotFoundException {
-	        return autorService.findById(id);
-	    }
-	  @PutMapping("/{id}")
-	    public MessageResponseDto updateById(@PathVariable Long id, @RequestBody @Valid  AutorDto autorDto) throws AutorNotFoundException {
-	        return autorService.updateById(id, autorDto);
-	    }
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteById(@PathVariable Long id) throws AutorNotFoundException {
+		autorService.delete(id);
+	}
+
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public MessageResponseDto createPerson(@RequestBody @Valid AutorDto AutorDto) {
+		return autorService.createAutor(AutorDto);
+	}
+
+	@GetMapping("/{id}")
+	public AutorDto findById(@PathVariable Long id) throws AutorNotFoundException {
+		return autorService.findById(id);
+	}
+
+	@PutMapping("/{id}")
+	public MessageResponseDto updateById(@PathVariable Long id, @RequestBody @Valid AutorDto autorDto)
+			throws AutorNotFoundException {
+		return autorService.updateById(id, autorDto);
+	}
 }
