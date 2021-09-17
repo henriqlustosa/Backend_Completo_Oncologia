@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.desafio.livraria.dto.request.LivroDto;
 import br.desafio.livraria.dto.response.MessageResponseDto;
-import br.desafio.livraria.exception.AutorNotFoundException;
+
 import br.desafio.livraria.exception.LivroNotFoundException;
 import br.desafio.livraria.modelo.Livro;
 import br.desafio.livraria.repository.LivroRepository;
