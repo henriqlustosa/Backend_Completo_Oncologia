@@ -48,6 +48,12 @@ public class AutorService {
 	                .build();
 	    }
 	 
+	 
+	  public void delete(Long id) throws AutorNotFoundException {
+	        verifyIfExists(id);
+	        autorRepository.deleteById(id);
+	    }
+	 
 	   public AutorDto findById(Long id) throws AutorNotFoundException {
 	        Autor autor = verifyIfExists(id);
 
