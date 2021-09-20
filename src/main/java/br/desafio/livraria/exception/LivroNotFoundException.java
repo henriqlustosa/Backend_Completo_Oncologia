@@ -8,6 +8,6 @@ public class LivroNotFoundException extends Exception {
 
 	public LivroNotFoundException(Long id) {
 
-        super("Person not found with ID " + id);
+        super("Livro não encontrado com ID: " + id);
     }
 }

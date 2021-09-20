@@ -13,6 +13,6 @@ public class AutorNotFoundException extends Exception {
 
 	public AutorNotFoundException(Long id) {
 
-        super("Person not found with ID " + id);
+        super("Autor não encontrado com ID:" + id);
     }
 }
