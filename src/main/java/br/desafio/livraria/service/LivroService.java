@@ -35,7 +35,7 @@ public class LivroService {
     	Livro personToSave = modelMapper.map(livroDto, Livro.class);
 
         Livro savedLivro = livroRepository.save(personToSave);
-        return createMessageResponse(savedLivro.getId(), "Created person with ID ");
+        return createMessageResponse(savedLivro.getId(), "Criado um livro com ID");
     }
 	
 	 private MessageResponseDto createMessageResponse(Long id, String message) {
@@ -65,7 +65,7 @@ public class LivroService {
 	        Livro LivroToUpdate = modelMapper.map(livroDto, Livro.class);
 
 	        Livro updatedPerson = livroRepository.save(LivroToUpdate);
-	        return createMessageResponse(updatedPerson.getId(), "Updated person with ID ");
+	        return createMessageResponse(updatedPerson.getId(), "Atualizado um livro com ID");
 	    }
 	 
 }

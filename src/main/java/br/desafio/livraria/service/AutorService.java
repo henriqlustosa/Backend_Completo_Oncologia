@@ -33,13 +33,21 @@ public class AutorService {
 				.map(t -> modelMapper.map(t, AutorDto.class))
 				.collect(Collectors.toList());
 	}
+	
+	
+	
+	
+	
 	public MessageResponseDto createAutor( AutorDto pacienteDto) {
     	
     	Autor personToSave = modelMapper.map(pacienteDto, Autor.class);
 
         Autor savedAutor = autorRepository.save(personToSave);
-        return createMessageResponse(savedAutor.getId(), "Created person with ID ");
+        
+        return createMessageResponse(savedAutor.getId(), "Criado um Autor com ID ");
     }
+	
+	
 	
 	 private MessageResponseDto createMessageResponse(Long id, String message) {
 	        return MessageResponseDto
@@ -53,6 +61,8 @@ public class AutorService {
 	        verifyIfExists(id);
 	        autorRepository.deleteById(id);
 	    }
+	  
+	  
 	 
 	   public AutorDto findById(Long id) throws AutorNotFoundException {
 	        Autor autor = verifyIfExists(id);
@@ -60,10 +70,14 @@ public class AutorService {
 	        return modelMapper.map(autor, AutorDto.class);
 	    }
 	 
+	   
+	   
 	    private Autor verifyIfExists(Long id) throws AutorNotFoundException {
 	        return autorRepository.findById(id)
 	                .orElseThrow(() -> new AutorNotFoundException(id));
 	    }
+	    
+	    
 	    
 	    public MessageResponseDto updateById(Long id, AutorDto pacienteDto) throws AutorNotFoundException {
 	        verifyIfExists(id);
@@ -71,7 +85,7 @@ public class AutorService {
 	        Autor autorToUpdate = modelMapper.map(pacienteDto, Autor.class);
 
 	        Autor updatedPerson = autorRepository.save(autorToUpdate);
-	        return createMessageResponse(updatedPerson.getId(), "Updated person with ID ");
+	        return createMessageResponse(updatedPerson.getId(), "Atualizado um autor com ID ");
 	    }
 	 
 }
