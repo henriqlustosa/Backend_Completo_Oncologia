@@ -1,0 +1,26 @@
+version: "3.5"
+
+services:
+  postgres:
+    image: postgres:latest
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: livraria
+      POSTGRES_PASSWORD: admin
+
+  livraria:
+    image: livraria
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/livraria
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    depends_on:
+      - postgres
