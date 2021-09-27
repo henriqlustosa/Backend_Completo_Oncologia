@@ -64,8 +64,8 @@ public class LivroService {
 
 	        Livro LivroToUpdate = modelMapper.map(livroDto, Livro.class);
 
-	        Livro updatedPerson = livroRepository.save(LivroToUpdate);
-	        return createMessageResponse(updatedPerson.getId(), "Atualizado um livro com ID");
+	        Livro updatedLivro = livroRepository.save(LivroToUpdate);
+	        return createMessageResponse(updatedLivro.getId(), "Atualizado um livro com ID");
 	    }
 	 
 }

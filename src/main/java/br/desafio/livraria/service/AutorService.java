@@ -38,11 +38,11 @@ public class AutorService {
 	
 	
 	
-	public MessageResponseDto createAutor( AutorDto pacienteDto) {
+	public MessageResponseDto createAutor( AutorDto autorDto) {
     	
-    	Autor personToSave = modelMapper.map(pacienteDto, Autor.class);
+    	Autor autorToSave = modelMapper.map(autorDto, Autor.class);
 
-        Autor savedAutor = autorRepository.save(personToSave);
+        Autor savedAutor = autorRepository.save(autorToSave);
         
         return createMessageResponse(savedAutor.getId(), "Criado um Autor com ID ");
     }
