@@ -84,8 +84,8 @@ public class AutorService {
 
 	        Autor autorToUpdate = modelMapper.map(pacienteDto, Autor.class);
 
-	        Autor updatedPerson = autorRepository.save(autorToUpdate);
-	        return createMessageResponse(updatedPerson.getId(), "Atualizado um autor com ID ");
+	        Autor updatedAutor = autorRepository.save(autorToUpdate);
+	        return createMessageResponse(updatedAutor.getId(), "Atualizado um autor com ID ");
 	    }
 	 
 }
