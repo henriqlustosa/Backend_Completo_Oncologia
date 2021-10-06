@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LivroDto {
+public class LivroFormDto {
 
 	private Long id;
 
@@ -37,5 +37,5 @@ public class LivroDto {
 	
 	@Valid
 	@NotNull
-	private AutorDto autor;
+	private AutorFormDto autor;
 }

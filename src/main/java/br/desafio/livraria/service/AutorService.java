@@ -1,16 +1,17 @@
 package br.desafio.livraria.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-
-import br.desafio.livraria.dto.request.AutorDto;
+import br.desafio.livraria.dto.request.AutorFormDto;
+import br.desafio.livraria.dto.response.AutorDto;
 import br.desafio.livraria.dto.response.MessageResponseDto;
 import br.desafio.livraria.exception.AutorNotFoundException;
 import br.desafio.livraria.modelo.Autor;
@@ -26,25 +27,24 @@ public class AutorService {
 
 	ModelMapper modelMapper = new ModelMapper();
 
-	public List<AutorDto> listAll() {
-		List<Autor> allAutores = autorRepository.findAll();
+	public Page<AutorDto> listAll(Pageable paginacao) {
+		Page<Autor> allAutores = autorRepository.findAll(paginacao);
 		return allAutores
-				.stream()
-				.map(t -> modelMapper.map(t, AutorDto.class))
-				.collect(Collectors.toList());
+				.map(t -> modelMapper.map(t, AutorDto.class));
+			
 	}
 	
 	
 	
 	
 	
-	public MessageResponseDto createAutor( AutorDto autorDto) {
+	public AutorDto createAutor( AutorFormDto autorFormDto) {
     	
-    	Autor autorToSave = modelMapper.map(autorDto, Autor.class);
+    	Autor autorToSave = modelMapper.map(autorFormDto, Autor.class);
 
         Autor savedAutor = autorRepository.save(autorToSave);
         
-        return createMessageResponse(savedAutor.getId(), "Criado um Autor com ID ");
+        return modelMapper.map(savedAutor, AutorDto.class);
     }
 	
 	
@@ -79,7 +79,7 @@ public class AutorService {
 	    
 	    
 	    
-	    public MessageResponseDto updateById(Long id, AutorDto pacienteDto) throws AutorNotFoundException {
+	    public MessageResponseDto updateById(Long id, AutorFormDto pacienteDto) throws AutorNotFoundException {
 	        verifyIfExists(id);
 
 	        Autor autorToUpdate = modelMapper.map(pacienteDto, Autor.class);
