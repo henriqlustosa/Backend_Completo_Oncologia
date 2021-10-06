@@ -1,13 +1,15 @@
 package br.desafio.livraria.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.desafio.livraria.dto.request.LivroDto;
+import br.desafio.livraria.dto.request.LivroFormDto;
+import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.dto.response.MessageResponseDto;
 
 import br.desafio.livraria.exception.LivroNotFoundException;
@@ -23,19 +25,19 @@ public class LivroService {
 
 	ModelMapper modelMapper = new ModelMapper();
 
-	public List<LivroDto> listAll() {
-		List<Livro> allLivros = livroRepository.findAll();
+	public Page<LivroDto> listAll(Pageable paginacao) {
+		Page<Livro> allLivros = livroRepository.findAll(paginacao);
 		return allLivros
-				.stream()
-				.map(t -> modelMapper.map(t, LivroDto.class))
-				.collect(Collectors.toList());
+				.map(t -> modelMapper.map(t, LivroDto.class));
+			
 	}
-	public MessageResponseDto createLivro( LivroDto livroDto) {
+	
+	public LivroDto createLivro( LivroFormDto livroDto) {
     	
-    	Livro personToSave = modelMapper.map(livroDto, Livro.class);
+    	Livro livroToSave = modelMapper.map(livroDto, Livro.class);
 
-        Livro savedLivro = livroRepository.save(personToSave);
-        return createMessageResponse(savedLivro.getId(), "Criado um livro com ID");
+        Livro savedLivro = livroRepository.save(livroToSave);
+        return modelMapper.map(savedLivro,LivroDto.class);
     }
 	
 	 private MessageResponseDto createMessageResponse(Long id, String message) {
@@ -45,10 +47,10 @@ public class LivroService {
 	                .build();
 	    }
 	 
-	   public LivroDto findById(Long id) throws LivroNotFoundException {
+	   public LivroFormDto findById(Long id) throws LivroNotFoundException {
 	        Livro Livro = verifyIfExists(id);
 
-	        return modelMapper.map(Livro, LivroDto.class);
+	        return modelMapper.map(Livro, LivroFormDto.class);
 	    }
 		  public void delete(Long id) throws LivroNotFoundException {
 		        verifyIfExists(id);
@@ -59,7 +61,7 @@ public class LivroService {
 	                .orElseThrow(() -> new LivroNotFoundException(id));
 	    }
 	    
-	    public MessageResponseDto updateById(Long id, LivroDto livroDto) throws LivroNotFoundException {
+	    public MessageResponseDto updateById(Long id, LivroFormDto livroDto) throws LivroNotFoundException {
 	        verifyIfExists(id);
 
 	        Livro LivroToUpdate = modelMapper.map(livroDto, Livro.class);
