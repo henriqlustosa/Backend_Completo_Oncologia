@@ -1,9 +1,4 @@
 package br.desafio.livraria.service;
-
-
-
-
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,12 +44,7 @@ public class AutorService {
 	
 	
 	
-	 private MessageResponseDto createMessageResponse(Long id, String message) {
-	        return MessageResponseDto
-	                .builder()
-	                .message(message + id)
-	                .build();
-	    }
+
 	 
 	 
 	  public void delete(Long id) throws AutorNotFoundException {
@@ -79,13 +69,13 @@ public class AutorService {
 	    
 	    
 	    
-	    public MessageResponseDto updateById(Long id, AutorFormDto pacienteDto) throws AutorNotFoundException {
+	    public AutorDto updateById(Long id, AutorFormDto pacienteDto) throws AutorNotFoundException {
 	        verifyIfExists(id);
 
 	        Autor autorToUpdate = modelMapper.map(pacienteDto, Autor.class);
 
 	        Autor updatedAutor = autorRepository.save(autorToUpdate);
-	        return createMessageResponse(updatedAutor.getId(), "Atualizado um autor com ID ");
+	        return modelMapper.map(updatedAutor, AutorDto.class);
 	    }
 	 
 }

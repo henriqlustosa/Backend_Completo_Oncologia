@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.desafio.livraria.dto.request.AutorFormDto;
 import br.desafio.livraria.dto.response.AutorDto;
+import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.dto.response.MessageResponseDto;
 import br.desafio.livraria.exception.AutorNotFoundException;
+import br.desafio.livraria.exception.LivroNotFoundException;
 import br.desafio.livraria.service.AutorService;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
@@ -64,8 +66,16 @@ public class AutorController {
 	}
 
 	@PutMapping("/{id}")
-	public MessageResponseDto updateById(@PathVariable Long id, @RequestBody @Valid AutorFormDto autorDto)
+	public ResponseEntity<AutorDto>updateById(@PathVariable Long id, @RequestBody @Valid AutorFormDto autorFormDto, UriComponentsBuilder uriBuilder)
 			throws AutorNotFoundException {
-		return autorService.updateById(id, autorDto);
+	
+		AutorDto autorDtoUpdate = autorService.updateById(id, autorFormDto);
+		URI	uri = uriBuilder
+					.path("/usuarios/{id}")
+					.buildAndExpand(autorDtoUpdate.getId())
+					.toUri();
+		
+		
+		return ResponseEntity.created(uri).body(autorDtoUpdate);
 	}
 }

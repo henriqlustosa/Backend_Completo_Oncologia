@@ -25,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.dto.request.LivroFormDto;
 import br.desafio.livraria.dto.response.MessageResponseDto;
+import br.desafio.livraria.exception.AutorNotFoundException;
 import br.desafio.livraria.exception.LivroNotFoundException;
 import br.desafio.livraria.service.LivroService;
 
@@ -58,18 +59,29 @@ public class LivroController {
 				.path("/usuarios/{id}")
 				.buildAndExpand(livroDto.getId())
 				.toUri();
+
 		
 		return ResponseEntity.created(uri).body(livroDto);
 	}
 
 	@GetMapping("/{id}")
-	public LivroFormDto findById(@PathVariable Long id) throws LivroNotFoundException {
+	public LivroDto findById(@PathVariable Long id) throws LivroNotFoundException {
 		return livroService.findById(id);
 	}
 
 	@PutMapping("/{id}")
-	public MessageResponseDto updateById(@PathVariable Long id, @RequestBody @Valid LivroFormDto livroDto)
+	public ResponseEntity<LivroDto>  updateById(@PathVariable Long id, @RequestBody @Valid LivroFormDto livroFormDto, UriComponentsBuilder uriBuilder)
 			throws LivroNotFoundException {
-		return livroService.updateById(id, livroDto);
+	
+			LivroDto	livroDtoUpdate = livroService.updateById(id, livroFormDto);
+			URI	uri = uriBuilder
+					.path("/usuarios/{id}")
+					.buildAndExpand(livroDtoUpdate.getId())
+					.toUri();
+			
+	
+		
+		
+		return ResponseEntity.created(uri).body(livroDtoUpdate);
 	}
 }
