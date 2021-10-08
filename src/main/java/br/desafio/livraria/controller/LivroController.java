@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.dto.request.LivroFormDto;
-import br.desafio.livraria.dto.response.MessageResponseDto;
-import br.desafio.livraria.exception.AutorNotFoundException;
+
 import br.desafio.livraria.exception.LivroNotFoundException;
 import br.desafio.livraria.service.LivroService;
 
@@ -43,9 +42,9 @@ public class LivroController {
 	}
 
 	@DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteById(@PathVariable Long id) throws LivroNotFoundException {
+	public ResponseEntity<LivroDto>  deleteById(@PathVariable Long id) throws LivroNotFoundException {
 		livroService.delete(id);
+		  return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping
@@ -65,23 +64,15 @@ public class LivroController {
 	}
 
 	@GetMapping("/{id}")
-	public LivroDto findById(@PathVariable Long id) throws LivroNotFoundException {
-		return livroService.findById(id);
-	}
+	public ResponseEntity<LivroDto>findById(@PathVariable Long id) throws LivroNotFoundException {
+		return new ResponseEntity<>(livroService.findById(id), HttpStatus.OK);
 
+	}		
 	@PutMapping("/{id}")
 	public ResponseEntity<LivroDto>  updateById(@PathVariable Long id, @RequestBody @Valid LivroFormDto livroFormDto, UriComponentsBuilder uriBuilder)
 			throws LivroNotFoundException {
-	
-			LivroDto	livroDtoUpdate = livroService.updateById(id, livroFormDto);
-			URI	uri = uriBuilder
-					.path("/livros/{id}")
-					.buildAndExpand(livroDtoUpdate.getId())
-					.toUri();
-			
-	
 		
 		
-		return ResponseEntity.created(uri).body(livroDtoUpdate);
+			return new ResponseEntity<>(livroService.updateById(id, livroFormDto), HttpStatus.OK);
 	}
 }
