@@ -56,7 +56,7 @@ public class LivroController {
 		
 		
 		URI uri = uriBuilder
-				.path("/usuarios/{id}")
+				.path("/livrosgit /{id}")
 				.buildAndExpand(livroDto.getId())
 				.toUri();
 
@@ -75,7 +75,7 @@ public class LivroController {
 	
 			LivroDto	livroDtoUpdate = livroService.updateById(id, livroFormDto);
 			URI	uri = uriBuilder
-					.path("/usuarios/{id}")
+					.path("/livros/{id}")
 					.buildAndExpand(livroDtoUpdate.getId())
 					.toUri();
 			

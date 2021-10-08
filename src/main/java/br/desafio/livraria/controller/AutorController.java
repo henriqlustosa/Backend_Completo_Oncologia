@@ -71,7 +71,7 @@ public class AutorController {
 	
 		AutorDto autorDtoUpdate = autorService.updateById(id, autorFormDto);
 		URI	uri = uriBuilder
-					.path("/usuarios/{id}")
+					.path("/autores/{id}")
 					.buildAndExpand(autorDtoUpdate.getId())
 					.toUri();
 		
