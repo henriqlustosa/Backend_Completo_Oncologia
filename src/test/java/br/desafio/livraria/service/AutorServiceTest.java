@@ -4,9 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import br.desafio.livraria.modelo.*;
+import br.desafio.livraria.dto.request.AutorFormDto;
 import br.desafio.livraria.dto.request.AutorUpdateFormDto;
 import br.desafio.livraria.exception.DomainException;
 import br.desafio.livraria.exception.ResourceNotFoundException;
@@ -39,8 +43,10 @@ public class AutorServiceTest {
 	private AutorService autorService;
 	
 	private Autor autor = AutorFactory.criarAutor();
+	
+	private AutorFormDto autorFormDto = AutorFactory.criarAutorFormDto();
 	private AutorUpdateFormDto autorUpdateFormComEmailDiferenteDto = AutorFactory
-            .criarUsuarioUpdateFormComEmailDiferenteDto();
+            .criarAutorUpdateFormComEmailDiferenteDto();
 	private AutorUpdateFormDto autorUpdateFormComMesmoEmailDto = AutorFactory
             .criarAutorUpdateFormComMesmoEmailDto();
 	
@@ -79,4 +85,63 @@ public class AutorServiceTest {
         assertThrows(DomainException.class, () -> autorService.update(autorUpdateFormComEmailDiferenteDto));
         verify(autorRepository, times(0)).save(any());
     }
+    
+    @Test
+    void atualizarDeveRetornarautorAtualizadoComEmailDiferente() {
+        when(autorRepository.getById(anyLong())).thenReturn(autor);
+        var autorAtualizado = autorService.update(autorUpdateFormComEmailDiferenteDto);
+
+        assertEquals(autorAtualizado.getNome(), autorUpdateFormComEmailDiferenteDto.getNome());
+        verify(autorRepository, times(1)).save(any());
+    }
+
+    @Test
+    void atualizarDeveRetornarautorAtualizadoComMesmoEmail() {
+        when(autorRepository.getById(anyLong())).thenReturn(autor);
+        var autorAtualizado = autorService.update(autorUpdateFormComMesmoEmailDto);
+
+        assertEquals(autorAtualizado.getNome(), autorUpdateFormComMesmoEmailDto.getNome());
+        verify(autorRepository, times(1)).save(any());
+    }
+    
+    
+    
+    
+    @Test
+    void deletarDeveLancarResourceNotFoundExceptionQuandoIdInvalido() {
+        doThrow(EmptyResultDataAccessException.class).when(autorRepository).deleteById(1L);
+
+        assertThrows(ResourceNotFoundException.class, () -> autorService.delete(1l));
+        verify(autorRepository, times(1)).deleteById(anyLong());
+    }
+    
+    @Test
+    void criarDeveCriarautorQuandoEmailNaoEstiverEmRegistrado() {
+    	
+    	when(autorRepository.save(Mockito.any(Autor.class))).thenAnswer(i -> i.getArguments()[0]);
+        var autorResponseDto = autorService.createAutor(autorFormDto);
+
+        assertEquals(autorFormDto.getNome(), autorResponseDto.getNome());
+       
+        verify(autorRepository, times(1)).save(any());
+    }
+    
+    
+    @Test
+    void deletarDeveLancarDomainExceptionQuandoautorNaoPodeSerExcluido() {
+        doThrow(DataIntegrityViolationException.class).when(autorRepository).deleteById(1L);
+
+        assertThrows(DomainException.class, () -> autorService.delete(1l));
+        verify(autorRepository, times(1)).deleteById(anyLong());
+    }
+    
+    
+    @Test
+    void deletarNaoDeveRetornarNadaQuandoIdExistir() {
+        long validId = 1l;
+        autorRepository.deleteById(validId);
+
+        verify(autorRepository, times(1)).deleteById(validId);
+    }
+
 }

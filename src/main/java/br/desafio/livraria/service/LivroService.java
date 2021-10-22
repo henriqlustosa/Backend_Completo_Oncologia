@@ -6,6 +6,7 @@ import javax.persistence.EntityNotFoundException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import br.desafio.livraria.dto.request.LivroFormDto;
 import br.desafio.livraria.dto.request.LivroUpdateFormDto;
 import br.desafio.livraria.dto.response.LivroDetalhadoDto;
 import br.desafio.livraria.dto.response.LivroDto;
+import br.desafio.livraria.exception.DomainException;
 import br.desafio.livraria.exception.ResourceNotFoundException;
 import br.desafio.livraria.modelo.Livro;
 import br.desafio.livraria.repository.AutorRepository;
@@ -56,9 +58,11 @@ public class LivroService {
 	try {
 		
 		livroRepository.deleteById(id);
-	 } catch (EmptyResultDataAccessException e) {
-         throw new ResourceNotFoundException("Transacao inexistente: " + id);
-     }
+	  } catch (EmptyResultDataAccessException e) {
+          throw new ResourceNotFoundException("Autor inexistente: " + id);
+      } catch (DataIntegrityViolationException e) {
+      throw new DomainException("Autor não pode ser deletado");
+  	}
 	}
 
 	private Livro verifyIfExists(Long id) {

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.desafio.livraria.dto.request.AutorFormDto;
+import br.desafio.livraria.dto.request.AutorUpdateFormDto;
 import br.desafio.livraria.dto.response.AutorDto;
 
 
@@ -66,12 +67,12 @@ public class AutorController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<AutorDto>updateById(@PathVariable Long id, @RequestBody @Valid AutorFormDto autorFormDto, UriComponentsBuilder uriBuilder)
+	public ResponseEntity<AutorDto>update( @RequestBody @Valid AutorUpdateFormDto autorUpdateFormDto)
 	 {
 	
 	
 		
-		return new ResponseEntity<>(autorService.updateById(id, autorFormDto), HttpStatus.OK);
+		return new ResponseEntity<>(autorService.update(autorUpdateFormDto), HttpStatus.OK);
 		
 		
 	}

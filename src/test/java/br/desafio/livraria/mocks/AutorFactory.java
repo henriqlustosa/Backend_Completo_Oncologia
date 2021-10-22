@@ -29,7 +29,7 @@ public class AutorFactory {
 	        return modelMapper.map(usuario, AutorUpdateFormDto.class);
 	    }
 
-	    public static AutorUpdateFormDto criarUsuarioUpdateFormComEmailDiferenteDto() {
+	    public static AutorUpdateFormDto criarAutorUpdateFormComEmailDiferenteDto() {
 	        var usuario = new Autor(1L, " Update Henrique Lustosa", "update@gmail",LocalDate.now(),"Descricao do meu Minicurriculo");
 
 	        return modelMapper.map(usuario, AutorUpdateFormDto.class);
