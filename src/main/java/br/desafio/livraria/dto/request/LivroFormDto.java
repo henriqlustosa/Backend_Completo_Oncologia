@@ -9,20 +9,23 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public class LivroFormDto {
 
-	private Long id;
+	
 
 	@NotBlank
 	@Size(min = 10)
@@ -35,7 +38,8 @@ public class LivroFormDto {
 	@Min(100)
 	private Integer numeroPaginas;
 	
-	@Valid
+
 	@NotNull
-	private AutorFormDto autor;
+    @JsonAlias("autor_id")
+    private Long autorId;
 }

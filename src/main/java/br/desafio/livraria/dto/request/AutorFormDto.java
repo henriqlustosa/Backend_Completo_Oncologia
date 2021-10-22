@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AutorFormDto {
-	private Long id;
+	
     @NotEmpty
     @Size(min = 2, max = 100)
 	private String nome;

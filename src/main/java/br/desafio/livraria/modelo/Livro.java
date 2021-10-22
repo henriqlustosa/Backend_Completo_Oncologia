@@ -41,7 +41,14 @@ public class Livro {
 	 @Column(nullable = false)
 	 private Integer numeroPaginas;
 	
-	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+	 @ManyToOne()
 	 @JoinColumn(name = "autor_id")
 	 private Autor autor;
+	 
+	public void atualizarInformacoes(String titulo, LocalDate dataDeLancamento, Integer numeroPaginas) {
+	        this.titulo = titulo;
+	        this.dataDeLancamento = dataDeLancamento;
+	        this.numeroPaginas = numeroPaginas;
+	        
+	    }
 }

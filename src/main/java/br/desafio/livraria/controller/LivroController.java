@@ -24,8 +24,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.dto.request.LivroFormDto;
+import br.desafio.livraria.dto.request.LivroUpdateFormDto;
 
-import br.desafio.livraria.exception.LivroNotFoundException;
 import br.desafio.livraria.service.LivroService;
 
 @RestController
@@ -42,7 +42,7 @@ public class LivroController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<LivroDto>  deleteById(@PathVariable Long id) throws LivroNotFoundException {
+	public ResponseEntity<LivroDto>  deleteById(@PathVariable Long id)  {
 		livroService.delete(id);
 		  return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -55,7 +55,7 @@ public class LivroController {
 		
 		
 		URI uri = uriBuilder
-				.path("/livrosgit /{id}")
+				.path("/livros/{id}")
 				.buildAndExpand(livroDto.getId())
 				.toUri();
 
@@ -64,15 +64,15 @@ public class LivroController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<LivroDto>findById(@PathVariable Long id) throws LivroNotFoundException {
+	public ResponseEntity<LivroDto>findById(@PathVariable Long id) {
 		return new ResponseEntity<>(livroService.findById(id), HttpStatus.OK);
 
 	}		
 	@PutMapping("/{id}")
-	public ResponseEntity<LivroDto>  updateById(@PathVariable Long id, @RequestBody @Valid LivroFormDto livroFormDto, UriComponentsBuilder uriBuilder)
-			throws LivroNotFoundException {
+	public ResponseEntity<LivroDto>  update(@PathVariable Long id, @RequestBody @Valid LivroUpdateFormDto livroUpdateFormDto, UriComponentsBuilder uriBuilder)
+		{
 		
 		
-			return new ResponseEntity<>(livroService.updateById(id, livroFormDto), HttpStatus.OK);
+			return new ResponseEntity<>(livroService.update(livroUpdateFormDto), HttpStatus.OK);
 	}
 }
