@@ -68,8 +68,8 @@ public class LivroController {
 		return new ResponseEntity<>(livroService.findById(id), HttpStatus.OK);
 
 	}		
-	@PutMapping("/{id}")
-	public ResponseEntity<LivroDto>  update(@PathVariable Long id, @RequestBody @Valid LivroUpdateFormDto livroUpdateFormDto, UriComponentsBuilder uriBuilder)
+	@PutMapping
+	public ResponseEntity<LivroDto>  update( @RequestBody @Valid LivroUpdateFormDto livroUpdateFormDto)
 		{
 		
 		

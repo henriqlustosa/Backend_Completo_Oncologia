@@ -1,11 +1,13 @@
 package br.desafio.livraria.service;
-import java.time.LocalDate;
+
 import java.util.Objects;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import br.desafio.livraria.exception.DomainException;
 import br.desafio.livraria.exception.ResourceNotFoundException;
 import br.desafio.livraria.modelo.Autor;
 import br.desafio.livraria.repository.AutorRepository;
+import lombok.var;
 
 
 
@@ -54,8 +57,13 @@ public class AutorService {
 	 
 	 
 	  public void delete(Long id) {
-	        verifyIfExists(id);
-	        autorRepository.deleteById(id);
+		   try {
+	            autorRepository.deleteById(id);
+	        } catch (EmptyResultDataAccessException e) {
+	            throw new ResourceNotFoundException("Usuário inexistente");
+	        } catch (DataIntegrityViolationException e) {
+	            throw new DomainException("Usuário não pode ser deletado");
+	        }
 	    }
 	  
 	  
@@ -63,17 +71,18 @@ public class AutorService {
 	   public AutorDto findById(Long id)  {
 		   
 		   
-	        Autor autor = verifyIfExists(id);
+		    try {
+	            var autor = autorRepository.getById(id);
 
-	        return modelMapper.map(autor, AutorDto.class);
+	            return modelMapper.map(autor, AutorDto.class);
+	        } catch (EntityNotFoundException e) {
+	            throw new ResourceNotFoundException("Usuário inexistente");
+	        }
 	    }
 	 
 	   
 	   
-	    private Autor verifyIfExists(Long id)  {
-	        return autorRepository.findById(id)
-	        		.orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado: " + id));
-	    }
+	 
 	    
 	    
 	    
@@ -81,7 +90,7 @@ public class AutorService {
 	  
 
 	        try {
-	            var autor = autorRepository.getById( autorUpdateFormDto.getId());
+	            Autor autor = autorRepository.getById( autorUpdateFormDto.getId());
 	            if (!autorUpdateFormDto.getEmail().equalsIgnoreCase(autor.getEmail())) {
 	                verificarEmailEmUso(autorUpdateFormDto.getEmail());
 	            }
@@ -95,7 +104,7 @@ public class AutorService {
 	        }
 	    }
 	    private void verificarEmailEmUso(String email) {
-	        var autor = autorRepository.findByEmail(email);
+	        Autor autor = autorRepository.findByEmail(email);
 
 	        if (Objects.nonNull(autor)) {
 	            throw new DomainException("Login já em uso por outro usuário");

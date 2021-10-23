@@ -20,6 +20,8 @@ import br.desafio.livraria.mocks.*;
 import br.desafio.livraria.modelo.Livro;
 import br.desafio.livraria.repository.AutorRepository;
 import br.desafio.livraria.repository.LivroRepository;
+import lombok.var;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;

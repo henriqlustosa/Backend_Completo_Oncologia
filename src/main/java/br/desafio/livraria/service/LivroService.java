@@ -1,6 +1,6 @@
 package br.desafio.livraria.service;
 
-import java.time.LocalDate;
+
 
 import javax.persistence.EntityNotFoundException;
 
@@ -72,7 +72,7 @@ public class LivroService {
 
 	public LivroDto update(LivroUpdateFormDto livroUpdateFormDto) {
 		try {
-			var livro = livroRepository.getById(livroUpdateFormDto.getId());
+			Livro livro = livroRepository.getById(livroUpdateFormDto.getId());
 			
 			livro.atualizarInformacoes(livroUpdateFormDto.getTitulo(), livroUpdateFormDto.getDataDeLancamento(),
 					livroUpdateFormDto.getNumeroPaginas());

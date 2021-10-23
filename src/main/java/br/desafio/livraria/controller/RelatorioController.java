@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.desafio.livraria.dto.response.LivrosPorAutor;
 import br.desafio.livraria.dto.response.LivrosPorAutorDto;
 import br.desafio.livraria.service.RelatorioService;
 
@@ -17,10 +18,14 @@ public class RelatorioController {
 	private RelatorioService service;
 	
 	
-	@GetMapping("/livraria")
-	public List<LivrosPorAutorDto> relatorioCarteiraDeInvestimentos(){
+	@GetMapping("/livraria/dto")
+	public List<LivrosPorAutorDto> relatorioCarteiraDeInvestimentosDto(){
+		return service.relatorioLivrosPorAutorDto();
+	}
+
+	@GetMapping("/livraria/")
+	public List<LivrosPorAutor> relatorioCarteiraDeInvestimentos(){
 		return service.relatorioLivrosPorAutor();
 	}
-	
 
 }

@@ -16,11 +16,11 @@ import br.desafio.livraria.exception.DomainException;
 import br.desafio.livraria.exception.ResourceNotFoundException;
 import br.desafio.livraria.mocks.AutorFactory;
 import br.desafio.livraria.repository.AutorRepository;
-
+import lombok.var;
 
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
+
 
 import javax.persistence.EntityNotFoundException;
 
@@ -54,18 +54,18 @@ public class AutorServiceTest {
     @Test
     void findByIdDeveRetornarAutorDto() {
         long validId = 1L;
-        when(autorRepository.findById(anyLong())).thenReturn(Optional.of(autor));
+        when(autorRepository.getById(anyLong())).thenReturn(autor);
         var autorResponseDto = autorService.findById(validId);
         
 
         assertEquals(validId, autorResponseDto.getId());
-        verify(autorRepository, times(1)).findById(validId);
+        verify(autorRepository, times(1)).getById(validId);
     }
     
     
     @Test
     void findByIdDeveLancarResourceNotFoundExceptionQuandoIdInvalido() {
-		doThrow(EntityNotFoundException.class).when(autorRepository).findById(anyLong());
+		doThrow(EntityNotFoundException.class).when(autorRepository).getById(anyLong());
 
         assertThrows(ResourceNotFoundException.class, () -> autorService.findById(1L));
     }

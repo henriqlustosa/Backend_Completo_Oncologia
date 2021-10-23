@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.desafio.livraria.exception.*;
+import lombok.var;
 
 @RestControllerAdvice
 public class TratamentoDeErros {
@@ -35,7 +36,7 @@ public class TratamentoDeErros {
 	private ResponseEntity<ErrorResponse> buildValidationErrorResponse(MethodArgumentNotValidException ex,
 			HttpStatus status, String path) {
 
-		var errorResponse = ErrorResponse.builder().status(status.value()).erro(ex.getClass().getSimpleName())
+		ErrorResponse errorResponse = ErrorResponse.builder().status(status.value()).erro(ex.getClass().getSimpleName())
 				.message("Erro de Validacao").caminho(path).build();
 
 		ex.getFieldErrors()
