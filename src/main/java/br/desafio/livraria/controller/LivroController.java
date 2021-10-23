@@ -27,9 +27,11 @@ import br.desafio.livraria.dto.request.LivroFormDto;
 import br.desafio.livraria.dto.request.LivroUpdateFormDto;
 
 import br.desafio.livraria.service.LivroService;
+import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/livros")
+@Api(tags = "Livros")
 public class LivroController {
 
 	@Autowired

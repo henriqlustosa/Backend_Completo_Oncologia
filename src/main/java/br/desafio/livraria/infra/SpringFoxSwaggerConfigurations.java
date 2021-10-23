@@ -1,6 +1,9 @@
 package br.desafio.livraria.infra;
 
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -22,11 +25,14 @@ public class SpringFoxSwaggerConfigurations {
           .paths(PathSelectors.any())                          
           .build();                                           
     }
-
+			
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("API Carteira de Investimentos").description("Documentação")
-                .license("Apache License Version 2.0").licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
-                .termsOfServiceUrl("https://google.com.br").version("1.0.0")
-                .contact(new Contact("Henrique Lustosa", "google.com.br", "henriqlustosa@gmai.com")).build();
+    	  return new ApiInfo(
+    		      "Livraria", 
+    		      "Some custom description of API.", 
+    		      "API TOS", 
+    		      "Terms of service", 
+    		      new Contact("John Doe", "www.example.com", "myeaddress@company.com"), 
+    		      "License of API", "API license URL", Collections.emptyList());
     }
 }

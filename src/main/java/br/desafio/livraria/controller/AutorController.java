@@ -27,11 +27,13 @@ import br.desafio.livraria.dto.response.AutorDto;
 
 
 import br.desafio.livraria.service.AutorService;
+import io.swagger.annotations.Api;
+
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 @RestController
 @RequestMapping("/autores")
-
+@Api(tags = "Autores")
 public class AutorController {
 
 	@Autowired
