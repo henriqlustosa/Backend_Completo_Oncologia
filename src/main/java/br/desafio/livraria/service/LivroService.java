@@ -1,8 +1,7 @@
 package br.desafio.livraria.service;
 
-
-
 import javax.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,10 @@ import br.desafio.livraria.exception.ResourceNotFoundException;
 import br.desafio.livraria.modelo.Livro;
 import br.desafio.livraria.repository.AutorRepository;
 import br.desafio.livraria.repository.LivroRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class LivroService {
 
 	@Autowired
@@ -32,6 +33,7 @@ public class LivroService {
 
 	ModelMapper modelMapper = new ModelMapper();
 
+	@Transactional(readOnly = true)
 	public Page<LivroDto> listAll(Pageable paginacao) {
 		Page<Livro> allLivros = livroRepository.findAll(paginacao);
 		return allLivros.map(t -> modelMapper.map(t, LivroDto.class));
@@ -48,6 +50,7 @@ public class LivroService {
 		return modelMapper.map(savedLivro, LivroDto.class);
 	}
 
+	@Transactional(readOnly = true)
 	public LivroDetalhadoDto findById(Long id) {
 		Livro Livro = verifyIfExists(id);
 
@@ -55,14 +58,14 @@ public class LivroService {
 	}
 
 	public void delete(Long id) {
-	try {
-		
-		livroRepository.deleteById(id);
-	  } catch (EmptyResultDataAccessException e) {
-          throw new ResourceNotFoundException("Autor inexistente: " + id);
-      } catch (DataIntegrityViolationException e) {
-      throw new DomainException("Autor não pode ser deletado");
-  	}
+		try {
+
+			livroRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Autor inexistente: " + id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DomainException("Autor não pode ser deletado");
+		}
 	}
 
 	private Livro verifyIfExists(Long id) {
@@ -70,15 +73,16 @@ public class LivroService {
 				.orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado: " + id));
 	}
 
+	@Transactional
 	public LivroDto update(LivroUpdateFormDto livroUpdateFormDto) {
 		try {
 			Livro livro = livroRepository.getById(livroUpdateFormDto.getId());
-			
+
 			livro.atualizarInformacoes(livroUpdateFormDto.getTitulo(), livroUpdateFormDto.getDataDeLancamento(),
 					livroUpdateFormDto.getNumeroPaginas());
 			livroRepository.save(livro);
 			return modelMapper.map(livro, LivroDto.class);
-	
+
 		} catch (EntityNotFoundException e) {
 
 			throw new ResourceNotFoundException("Livro inexistente: " + livroUpdateFormDto.getId());
