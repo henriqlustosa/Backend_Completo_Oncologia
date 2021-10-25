@@ -2,7 +2,7 @@ package br.desafio.livraria.infra;
 
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collections;
+
 
 import org.springframework.context.annotation.Bean;
 
@@ -23,16 +23,18 @@ public class SpringFoxSwaggerConfigurations {
           .select()                                  
           .apis(RequestHandlerSelectors.any())              
           .paths(PathSelectors.any())                          
-          .build();                                           
+          .build()
+          .apiInfo(apiInfo());
     }
 			
-    private ApiInfo apiInfo() {
-    	  return new ApiInfo(
-    		      "Livraria", 
-    		      "Some custom description of API.", 
-    		      "API TOS", 
-    		      "Terms of service", 
-    		      new Contact("John Doe", "www.example.com", "myeaddress@company.com"), 
-    		      "License of API", "API license URL", Collections.emptyList());
-    }
+	private ApiInfo apiInfo() {
+	    return new ApiInfoBuilder()
+	            .title("Aplicação de uma Livraria Online")
+	            .description("Um exemplo de aplicação Spring Boot REST API")
+	            .version("1.0.0")
+	            .license("Apache License Version 2.0")
+	            .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
+	            .contact(new Contact("Henrique Lustosa", "https://henriquelustosa.me/", "henriqlustosa@gmail.com"))
+	            .build();
+	}
 }

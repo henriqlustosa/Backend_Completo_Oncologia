@@ -16,10 +16,10 @@
 	<description>Projeto para o curso bootcamp da Alura de JAVA.</description>
 	<properties>
 		<java.version>11</java.version>
-			
+
 
 		<docker.image.prefix>livraria</docker.image.prefix>
-	
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -55,17 +55,17 @@
 			<artifactId>modelmapper</artifactId>
 			<version>2.4.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		 <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-        </dependency>
-        		<dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>3.0.0</version>
@@ -73,6 +73,11 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
 		</dependency>
 	</dependencies>
