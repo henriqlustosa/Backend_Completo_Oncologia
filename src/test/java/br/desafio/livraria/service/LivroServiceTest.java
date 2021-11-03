@@ -18,6 +18,7 @@ import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.exception.ResourceNotFoundException;
 import br.desafio.livraria.mocks.*;
 import br.desafio.livraria.modelo.Livro;
+import br.desafio.livraria.modelo.Usuario;
 import br.desafio.livraria.repository.AutorRepository;
 import br.desafio.livraria.repository.LivroRepository;
 import lombok.var;
@@ -45,7 +46,8 @@ public class LivroServiceTest {
 	private Livro livro = LivroFactory.criarLivro();
 
 	private LivroUpdateFormDto livroUpdateFormDto = LivroFactory.criarLivroUpdateFormDtoComIdInvalido();
-	
+
+	    private Usuario usuarioLogado = UsuarioFactory.criarUsuario();
 	
 
 	@Test
@@ -55,7 +57,7 @@ public class LivroServiceTest {
 		when(autorRepository.getById(livroFormDto.getAutorId()))
 				.thenReturn(AutorFactory.criarAutor());
 
-		LivroDto dto = livroService.createLivro(livroFormDto);
+		LivroDto dto = livroService.createLivro(livroFormDto, usuarioLogado);
 		assertEquals(livroFormDto.getTitulo(), dto.getTitulo());
 		assertEquals(livroFormDto.getDataDeLancamento(), dto.getDataDeLancamento());
 		assertEquals(livroFormDto.getNumeroPaginas(), dto.getNumeroPaginas());
@@ -70,13 +72,13 @@ public class LivroServiceTest {
 	void atualizarDeveLancarResourceNotFoundQuandoTransacaoIdInvalido() {
 		when(livroRepository.getById(anyLong())).thenThrow(EntityNotFoundException.class);
 
-		assertThrows(ResourceNotFoundException.class, () -> livroService.update(livroUpdateFormDto));
+		assertThrows(ResourceNotFoundException.class, () -> livroService.update(livroUpdateFormDto, usuarioLogado));
 	}
 	
 	@Test
 	void findByIdDeveRetornarTransacaoQuandoIdValido() {
 		when(livroRepository.findById(anyLong())).thenReturn(Optional.of(livro));
-		LivroDetalhadoDto livroResponseDto = livroService.findById(1l);
+		LivroDetalhadoDto livroResponseDto = livroService.findById(1l, usuarioLogado);
 
 		assertEquals(livroFormDto.getTitulo(), livroResponseDto.getTitulo());
 		assertEquals(livroFormDto.getDataDeLancamento(), livroResponseDto.getDataDeLancamento());
@@ -88,7 +90,7 @@ public class LivroServiceTest {
 	@Test
 	void findByIdDeveLancarResouceNotFoundQuandoIdTransacaoInvalido() {
 		
-		assertThrows(ResourceNotFoundException.class, () -> livroService.findById(10l));
+		assertThrows(ResourceNotFoundException.class, () -> livroService.findById(10l, usuarioLogado));
 	}
 	
 
@@ -96,14 +98,14 @@ public class LivroServiceTest {
     void removerDeveriaLancarResourceNotFoundQuandoIdInvalido() {
         doThrow(EmptyResultDataAccessException.class).when(livroRepository).deleteById(anyLong());
 
-        assertThrows(ResourceNotFoundException.class, () -> livroService.delete(100L));
+        assertThrows(ResourceNotFoundException.class, () -> livroService.delete(100L,usuarioLogado));
     }
 
 	@Test
 	void removerNaoDeveTerRetornoComIdValido() {
 		var validId = 1l;
 
-		livroService.delete(validId);
+		livroService.delete(validId, usuarioLogado);
 
 		verify(livroRepository, times(1)).deleteById(1l);
 	}

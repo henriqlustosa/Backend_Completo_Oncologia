@@ -2,12 +2,15 @@
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import br.desafio.livraria.dto.response.LivrosPorAutor;
 import br.desafio.livraria.dto.response.LivrosPorAutorDto;
 import br.desafio.livraria.modelo.Livro;
+import br.desafio.livraria.modelo.Usuario;
 
 public interface LivroRepository extends JpaRepository<Livro, Long> {
 
@@ -21,5 +24,7 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
 	            + "count(*) * 1.0 / (select count(*) from Livro) * 100.0 as percentual "
 	            + "from Livro l group by l.autor order by percentual desc")
 	    List<LivrosPorAutor> relatorioLivrosPorAutor();
+
+		Page<Livro> findAllByUsuario(Pageable paginacao, Usuario usuarioLogado);
 	
 }

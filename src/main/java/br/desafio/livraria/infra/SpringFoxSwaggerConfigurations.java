@@ -2,7 +2,8 @@ package br.desafio.livraria.infra;
 
 import org.springframework.context.annotation.Configuration;
 
-
+import java.util.Arrays;
+import springfox.documentation.builders.RequestParameterBuilder;
 
 import org.springframework.context.annotation.Bean;
 
@@ -24,6 +25,7 @@ public class SpringFoxSwaggerConfigurations {
           .apis(RequestHandlerSelectors.any())              
           .paths(PathSelectors.any())                          
           .build()
+          .globalRequestParameters(Arrays.asList(new RequestParameterBuilder().name("Authorization").description("Bearer Token").required(false).in("header").build()))
           .apiInfo(apiInfo());
     }
 			

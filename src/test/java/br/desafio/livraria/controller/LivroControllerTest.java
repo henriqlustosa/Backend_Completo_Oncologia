@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -20,10 +20,12 @@ import br.desafio.livraria.dto.request.LivroUpdateFormDto;
 import br.desafio.livraria.dto.response.LivroDetalhadoDto;
 import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.mocks.LivroFactory;
+import br.desafio.livraria.mocks.UsuarioFactory;
+import br.desafio.livraria.modelo.Usuario;
 import br.desafio.livraria.service.LivroService;
 import br.desafio.livraria.exception.*;
-
 import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -60,24 +62,26 @@ public class LivroControllerTest {
     private LivroFormDto livroFormDto;
     private LivroUpdateFormDto livroUpdateFormDto;
     
+    private Usuario usuarioLogado ;
+    
 
     @BeforeEach
     void setUp() {
         livroResponseDto = LivroFactory.criarLivroResponseDto();
     	livroResponseDetalhadoDto = LivroFactory.criarLivroDetalhadoDto();
     	
-       
+    	 usuarioLogado = UsuarioFactory.criarUsuario();
          
          livroFormDto = LivroFactory.criarLivroFormDto();
          livroUpdateFormDto = LivroFactory.criarLivroUpdateFormDto();
          livroAtualizaResponseDto = LivroFactory.criarLivroAtualizadoResponseDto();
 
-         when(livroService.findById(existingId)).thenReturn(livroResponseDetalhadoDto);
-         when(livroService.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
-         when(livroService.createLivro(any(LivroFormDto.class))).thenReturn(livroResponseDto);
-         when(livroService.update(any(LivroUpdateFormDto.class))).thenReturn(livroAtualizaResponseDto);
-         doThrow(ResourceNotFoundException.class).when(livroService).delete(nonExistingId);
-         doNothing().when(livroService).delete(existingId);
+         when(livroService.findById(existingId,usuarioLogado)).thenReturn(livroResponseDetalhadoDto);
+         when(livroService.findById(nonExistingId,usuarioLogado)).thenThrow(ResourceNotFoundException.class);
+         when(livroService.createLivro(any(LivroFormDto.class), usuarioLogado)).thenReturn(livroResponseDto);
+         when(livroService.update(any(LivroUpdateFormDto.class), usuarioLogado)).thenReturn(livroAtualizaResponseDto);
+         doThrow(ResourceNotFoundException.class).when(livroService).delete(nonExistingId, usuarioLogado);
+         doNothing().when(livroService).delete(existingId, usuarioLogado);
     }
 
     @Test

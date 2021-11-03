@@ -19,8 +19,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import br.desafio.livraria.dto.response.LivrosPorAutorDto;
 import br.desafio.livraria.mocks.AutorFactory;
 import br.desafio.livraria.mocks.LivroFactory;
+import br.desafio.livraria.mocks.UsuarioFactory;
 import br.desafio.livraria.modelo.Autor;
 import br.desafio.livraria.modelo.Livro;
+import br.desafio.livraria.modelo.Usuario;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -45,14 +47,15 @@ public class LivroRepositoryTest {
         Autor a3 = AutorFactory.criarAutor("Fernanda Nogueira", "fernada@mail.com", LocalDate.parse("1952-12-05"),
                 "Curriculo");
         testEntityManager.persist(a3);
+        Usuario u1 = UsuarioFactory.criarUsuario();
 
-        Livro l1 = LivroFactory.criarLivro("Aprenda Java em 21 dias", LocalDate.parse("2004-03-12"), 100, a1);
+        Livro l1 = LivroFactory.criarLivro("Aprenda Java em 21 dias", LocalDate.parse("2004-03-12"), 100, a1,u1);
         testEntityManager.persist(l1);
-        Livro l2 = LivroFactory.criarLivro("Aprenda a falar em público", LocalDate.parse("2004-03-12"), 100, a2);
+        Livro l2 = LivroFactory.criarLivro("Aprenda a falar em público", LocalDate.parse("2004-03-12"), 100, a2,u1);
         testEntityManager.persist(l2);
-        Livro l3 = LivroFactory.criarLivro("Otimizando seu tempo", LocalDate.parse("2004-03-12"), 100, a3);
+        Livro l3 = LivroFactory.criarLivro("Otimizando seu tempo", LocalDate.parse("2004-03-12"), 100, a3,u1);
         testEntityManager.persist(l3);
-        Livro l4 = LivroFactory.criarLivro("Como ser mais produtivo", LocalDate.parse("2004-04-21"), 100, a3);
+        Livro l4 = LivroFactory.criarLivro("Como ser mais produtivo", LocalDate.parse("2004-04-21"), 100, a3,u1);
         testEntityManager.persist(l4);
     }
 
