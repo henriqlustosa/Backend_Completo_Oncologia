@@ -47,7 +47,8 @@ public class LivroRepositoryTest {
         Autor a3 = AutorFactory.criarAutor("Fernanda Nogueira", "fernada@mail.com", LocalDate.parse("1952-12-05"),
                 "Curriculo");
         testEntityManager.persist(a3);
-        Usuario u1 = UsuarioFactory.criarUsuario();
+        Usuario u1 = UsuarioFactory.criarUsuarioSemId();
+        testEntityManager.persist(u1);
 
         Livro l1 = LivroFactory.criarLivro("Aprenda Java em 21 dias", LocalDate.parse("2004-03-12"), 100, a1,u1);
         testEntityManager.persist(l1);
@@ -65,7 +66,7 @@ public class LivroRepositoryTest {
     	 List<LivrosPorAutorDto> relatorio = livroRepository.relatorioLivrosPorAutorDto();
 
         Assertions.assertThat(relatorio).hasSize(3)
-                .extracting(LivrosPorAutorDto::getQuantidade,LivrosPorAutorDto::getPercentual)
+                .extracting(LivrosPorAutorDto::getAutor,LivrosPorAutorDto::getQuantidade,LivrosPorAutorDto::getPercentual)
                 .containsExactlyInAnyOrder(Assertions.tuple("Fernanda Nogueira", 2L, new BigDecimal("50.00")),
                         Assertions.tuple("André da Silva", 1L, new BigDecimal("25.00")),
                         Assertions.tuple("Juliana Carvalho", 1L, new BigDecimal("25.00")));
