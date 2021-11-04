@@ -4,6 +4,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -52,7 +53,7 @@ public class LivroService {
 			if (!usuario.equals(usuarioLogado)) {
 				throw obterExcecaoDeAcessoNegado();
 			}
-
+	    modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		Livro livroToSave = modelMapper.map(livroFormDto, Livro.class);
 		livroToSave.setId(null);
 		livroToSave.setUsuario(usuarioRepository.getById(livroFormDto.getUsuarioId()));
@@ -89,11 +90,9 @@ public class LivroService {
 				throw obterExcecaoDeAcessoNegado();
 			}
 			livroRepository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Autor inexistente: " + id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DomainException("Autor não pode ser deletado");
-		}
+		 } catch (EntityNotFoundException e) {
+	            throw new ResourceNotFoundException("Livro inexistente: " + id);
+	        }
 	}
 
 	private Livro verifyIfExists(Long id) {

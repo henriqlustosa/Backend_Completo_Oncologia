@@ -22,7 +22,7 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
 	  
 	    @Query("select l.autor.nome as autor, count(*) as quantidade, "
 	            + "count(*) * 1.0 / (select count(*) from Livro) * 100.0 as percentual "
-	            + "from Livro l group by l.autor order by percentual desc")
+	            + "from Livro l group by l.autor.nome order by percentual desc")
 	    List<LivrosPorAutor> relatorioLivrosPorAutor();
 
 		Page<Livro> findAllByUsuario(Pageable paginacao, Usuario usuarioLogado);
