@@ -3,12 +3,16 @@ package br.desafio.livraria.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,11 +23,19 @@ import br.desafio.livraria.dto.request.LivroFormDto;
 import br.desafio.livraria.dto.request.LivroUpdateFormDto;
 import br.desafio.livraria.dto.response.LivroDetalhadoDto;
 import br.desafio.livraria.dto.response.LivroDto;
+import br.desafio.livraria.mocks.AutorFactory;
 import br.desafio.livraria.mocks.LivroFactory;
 import br.desafio.livraria.mocks.UsuarioFactory;
+import br.desafio.livraria.modelo.Autor;
+import br.desafio.livraria.modelo.Livro;
 import br.desafio.livraria.modelo.Usuario;
+import br.desafio.livraria.repository.AutorRepository;
+import br.desafio.livraria.repository.LivroRepository;
+import br.desafio.livraria.repository.UsuarioRepository;
 import br.desafio.livraria.service.LivroService;
 import br.desafio.livraria.exception.*;
+import br.desafio.livraria.infra.security.TokenService;
+
 import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.Mockito.doNothing;
@@ -36,6 +48,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
 
 import javax.transaction.Transactional;
 
@@ -51,49 +65,82 @@ public class LivroControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private LivroService livroService;
+    
+    @Autowired
+    private LivroRepository livroRepository;
 
-    private Long existingId = 1L;
+    private Long existingId ;
     private Long nonExistingId = 10L;
     private LivroDto livroResponseDto;
-    private LivroDetalhadoDto livroResponseDetalhadoDto;
+   
     private LivroDto livroAtualizaResponseDto;
     private LivroFormDto livroFormDto;
     private LivroUpdateFormDto livroUpdateFormDto;
     
     private Usuario usuarioLogado ;
+    private Livro livro;
+    private Livro livroUpdated;
+	
+    @Autowired
+	private UsuarioRepository usuarioRepository;
+    @Autowired
+   	private AutorRepository autorRepository;
     
+   
+
+	@Autowired
+	private TokenService tokenService;
+
+    private String token;
+    
+    private Usuario usuario;
+    private Autor autor;
+    private static ModelMapper modelMapper = new ModelMapper();
+
 
     @BeforeEach
     void setUp() {
-        livroResponseDto = LivroFactory.criarLivroResponseDto();
-    	livroResponseDetalhadoDto = LivroFactory.criarLivroDetalhadoDto();
+    	usuario = UsuarioFactory.criarUsuarioSemId();
+    	usuarioLogado= usuarioRepository.save(usuario);
     	
-    	 usuarioLogado = UsuarioFactory.criarUsuario();
+		Authentication authentication = new UsernamePasswordAuthenticationToken(usuarioLogado, usuarioLogado.getLogin());
+		token = "Bearer " + tokenService.gerarToken(authentication);
+		
+		autor = AutorFactory.criarAutorSemId();
+		Autor autorSaved = autorRepository.save(autor);
+		
+		
+		
+		livro = LivroFactory.criarLivro("Lorem Ipsum", LocalDate.parse("2020-12-20"), 100, autorSaved,usuarioLogado);
+		
+		
+		
+		Livro livroSaved =livroRepository.save(livro);
+		
+		existingId = livroSaved.getId();
+		
+		livroUpdated = LivroFactory.criarLivro( existingId,"Updated Lorem Ipsum", LocalDate.parse("2020-12-20"), 100, autorSaved,usuarioLogado);
+        livroResponseDto = modelMapper.map(livroSaved, LivroDto.class);
+    
+    	 
+    
          
-         livroFormDto = LivroFactory.criarLivroFormDto();
-         livroUpdateFormDto = LivroFactory.criarLivroUpdateFormDto();
-         livroAtualizaResponseDto = LivroFactory.criarLivroAtualizadoResponseDto();
+         livroFormDto = modelMapper.map(livroSaved, LivroFormDto.class);
+         livroUpdateFormDto = modelMapper.map(livroUpdated, LivroUpdateFormDto.class);
+         livroAtualizaResponseDto = modelMapper.map(livroUpdated, LivroDto.class);
 
-         when(livroService.findById(existingId,usuarioLogado)).thenReturn(livroResponseDetalhadoDto);
-         when(livroService.findById(nonExistingId,usuarioLogado)).thenThrow(ResourceNotFoundException.class);
-         when(livroService.createLivro(any(LivroFormDto.class), usuarioLogado)).thenReturn(livroResponseDto);
-         when(livroService.update(any(LivroUpdateFormDto.class), usuarioLogado)).thenReturn(livroAtualizaResponseDto);
-         doThrow(ResourceNotFoundException.class).when(livroService).delete(nonExistingId, usuarioLogado);
-         doNothing().when(livroService).delete(existingId, usuarioLogado);
     }
 
     @Test
     void findByIdShouldReturnAnBookWhenIdExists() throws Exception {
-        mockMvc.perform(get("/livros/{id}", existingId)).andExpect(status().isOk())
+        mockMvc.perform(get("/livros/{id}", existingId).header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(livroResponseDto.getId()));
     }
     @Test
     void criarShouldReturnBadRequestWhenInvalidDataWasProvided() throws Exception {
         String invalidData = "{}";
 
-        mockMvc.perform(post("/livros").contentType(MediaType.APPLICATION_JSON).content(invalidData))
+        mockMvc.perform(post("/livros").contentType(MediaType.APPLICATION_JSON).content(invalidData).header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isBadRequest());
     }
 
@@ -101,16 +148,17 @@ public class LivroControllerTest {
     void criarShouldReturnAnBookWhenSuccessfully() throws Exception {
         String validData = objectMapper.writeValueAsString(livroFormDto);
 
-        mockMvc.perform(post("/livros").contentType(MediaType.APPLICATION_JSON).content(validData))
+        mockMvc.perform(post("/livros").contentType(MediaType.APPLICATION_JSON).content(validData).header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(header().exists("Location")).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(livroResponseDto.getId()));
+                .andExpect(jsonPath("$.id").value(livroResponseDto.getId() + 1l));
+        
     }
 
     @Test
     void atualizarShouldReturnAnBookWhenSuccessfully() throws Exception {
         String validData = objectMapper.writeValueAsString(livroUpdateFormDto);
 
-        mockMvc.perform(put("/livros").contentType(MediaType.APPLICATION_JSON).content(validData))
+        mockMvc.perform(put("/livros").contentType(MediaType.APPLICATION_JSON).content(validData).header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.id").value(livroAtualizaResponseDto.getId()))
                 .andExpect(jsonPath("$.titulo").value(livroAtualizaResponseDto.getTitulo()));
     }
@@ -120,19 +168,19 @@ public class LivroControllerTest {
         livroUpdateFormDto.setNumeroPaginas(10);
         String invalidData = objectMapper.writeValueAsString(livroUpdateFormDto);
 
-        mockMvc.perform(put("/livros").contentType(MediaType.APPLICATION_JSON).content(invalidData))
+        mockMvc.perform(put("/livros").contentType(MediaType.APPLICATION_JSON).content(invalidData).header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void deletarShouldReturnBadRequestWhenInvalidId() throws Exception {
-        mockMvc.perform(delete("/livros/{id}", nonExistingId).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/livros/{id}", nonExistingId).contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void deletarShouldDoNothingWhenValidId() throws Exception {
-        mockMvc.perform(delete("/livros/{id}", existingId).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/livros/{id}", existingId).contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isNoContent());
     }
    
