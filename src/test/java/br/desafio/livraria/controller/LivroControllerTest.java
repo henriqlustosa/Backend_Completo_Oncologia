@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.desafio.livraria.dto.request.LivroFormDto;
 import br.desafio.livraria.dto.request.LivroUpdateFormDto;
-import br.desafio.livraria.dto.response.LivroDetalhadoDto;
+
 import br.desafio.livraria.dto.response.LivroDto;
 import br.desafio.livraria.mocks.AutorFactory;
 import br.desafio.livraria.mocks.LivroFactory;
@@ -32,15 +32,12 @@ import br.desafio.livraria.modelo.Usuario;
 import br.desafio.livraria.repository.AutorRepository;
 import br.desafio.livraria.repository.LivroRepository;
 import br.desafio.livraria.repository.UsuarioRepository;
-import br.desafio.livraria.service.LivroService;
-import br.desafio.livraria.exception.*;
+
 import br.desafio.livraria.infra.security.TokenService;
 
-import static org.mockito.ArgumentMatchers.any;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
