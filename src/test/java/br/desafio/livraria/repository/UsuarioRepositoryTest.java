@@ -1,6 +1,5 @@
 package br.desafio.livraria.repository;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import br.desafio.livraria.modelo.Usuario;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,35 +25,35 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @ActiveProfiles("test")
 public class UsuarioRepositoryTest {
-	 @Autowired
-	    private UsuarioRepository usuarioRepository;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
-	    @Autowired
-	    private TestEntityManager testEntityManager;
+	@Autowired
+	private TestEntityManager testEntityManager;
 
-	    private Usuario usuario;
-	
-	 @BeforeEach
-	    private void setUp() {
-	        usuario = UsuarioFactory.criarUsuarioSemId();
+	private Usuario usuario;
 
-	        testEntityManager.persist(usuario);
-	    }
+	@BeforeEach
+	private void setUp() {
+		usuario = UsuarioFactory.criarUsuarioSemId();
 
-	    @Test
-	    void findByEmailDeveriaRetornarUmUsuarioValido() {
-	        Optional<Usuario> usuarioEncontrado = usuarioRepository.findByLogin(usuario.getLogin());
+		testEntityManager.persist(usuario);
+	}
 
-	        assertEquals(usuario.getId(), usuarioEncontrado.get().getId());
-	        assertEquals(usuario.getLogin(), usuarioEncontrado.get().getLogin());
-	        assertEquals(usuario.getNome(), usuarioEncontrado.get().getNome());
-	    }
+	@Test
+	void findByEmailDeveriaRetornarUmUsuarioValido() {
+		Optional<Usuario> usuarioEncontrado = usuarioRepository.findByLogin(usuario.getLogin());
 
-	    @Test
-	    void findByNaoDeveriaTerRetornoComEmailNaoCadastrado() {
-	        Optional<Usuario> usuarioEncontrado = usuarioRepository.findByLogin("henriqlustosa");
+		assertEquals(usuario.getId(), usuarioEncontrado.get().getId());
+		assertEquals(usuario.getLogin(), usuarioEncontrado.get().getLogin());
+		assertEquals(usuario.getNome(), usuarioEncontrado.get().getNome());
+	}
 
-	        assertTrue(usuarioEncontrado.isPresent());
-	    }
+	@Test
+	void findByNaoDeveriaTerRetornoComEmailNaoCadastrado() {
+		Optional<Usuario> usuarioEncontrado = usuarioRepository.findByLogin("henriqlustosa");
+
+		assertTrue(usuarioEncontrado.isPresent());
+	}
 
 }

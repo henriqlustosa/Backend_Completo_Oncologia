@@ -1,0 +1,23 @@
+version: "3"
+services:
+  livraria_database:
+    image: postgres:latest
+    expose:
+      - 5433
+    ports:
+      - 5433:5433
+    env_file:
+      - livraria_database.env
+    command: -p 5433
+  
+
+  livraria_app:
+    image: desafio/livraria-api
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - livraria_database
+    env_file:
+      - livraria_app.env

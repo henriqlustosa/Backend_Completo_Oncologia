@@ -2,7 +2,6 @@ package br.desafio.livraria.modelo;
 
 import java.time.LocalDate;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
@@ -19,6 +18,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Entity
 @Data
 @Builder
@@ -28,30 +28,31 @@ import lombok.Setter;
 @Setter
 @Table(name = "livros")
 public class Livro {
-	 @Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 private Long id;
-	
-	 @Column(nullable = false)
-	 private String titulo;
-	 
-	 @Column(nullable = false)
-	 private LocalDate dataDeLancamento;
-	 
-	 @Column(nullable = false)
-	 private Integer numeroPaginas;
-	
-	 @ManyToOne()
-	 @JoinColumn(name = "autor_id")
-	 private Autor autor;
-	 
-	 @ManyToOne()
-	 @JoinColumn(name = "usuario_id")
-	 private Usuario usuario;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false)
+	private String titulo;
+
+	@Column(nullable = false)
+	private LocalDate dataDeLancamento;
+
+	@Column(nullable = false)
+	private Integer numeroPaginas;
+
+	@ManyToOne()
+	@JoinColumn(name = "autor_id")
+	private Autor autor;
+
+	@ManyToOne()
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
+
 	public void atualizarInformacoes(String titulo, LocalDate dataDeLancamento, Integer numeroPaginas) {
-	        this.titulo = titulo;
-	        this.dataDeLancamento = dataDeLancamento;
-	        this.numeroPaginas = numeroPaginas;
-	        
-	    }
+		this.titulo = titulo;
+		this.dataDeLancamento = dataDeLancamento;
+		this.numeroPaginas = numeroPaginas;
+
+	}
 }

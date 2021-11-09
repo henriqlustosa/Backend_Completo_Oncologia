@@ -15,10 +15,10 @@
 	<name>livraria</name>
 	<description>Projeto para o curso bootcamp da Alura de JAVA.</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>1.8</java.version>
 
 
-		<docker.image.prefix>livraria</docker.image.prefix>
+
 
 	</properties>
 	<dependencies>
@@ -98,14 +98,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.4.9</version>
-				<configuration>
-					<repository>${docker.image.prefix}/${project.artifactId}</repository>
-				</configuration>
-			</plugin>
+		
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -52,10 +52,10 @@ public class AutorControllerTest {
 	@Autowired
 	private TokenService tokenService;
 
-    private String token;
-    
-    private Usuario usuario;
-	
+	private String token;
+
+	private Usuario usuario;
+
 	@BeforeEach
 	void setUp() {
 		usuario = UsuarioFactory.criarUsuarioSemId();
@@ -64,20 +64,22 @@ public class AutorControllerTest {
 
 		this.token = "Bearer " + tokenService.gerarToken(authentication);
 	}
+
 	@Test
 	void naoDeveriaCadastrarAutorComDadosIncompletos() throws Exception {
 		String json = "{}";
 
-		mvc.perform(post("/autores").contentType(MediaType.APPLICATION_JSON).content(json).header(HttpHeaders.AUTHORIZATION, token))
-				.andExpect(status().isBadRequest());
+		mvc.perform(post("/autores").contentType(MediaType.APPLICATION_JSON).content(json)
+				.header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isBadRequest());
 	}
 
 	@Test
 	void deveriaCadastrarUmAutorComDadosCompletos() throws Exception {
 		String json = objectMapper.writeValueAsString(AutorFactory.criarAutorFormDto());
 
-		mvc.perform(post("/autores").contentType(MediaType.APPLICATION_JSON).content(json).header(HttpHeaders.AUTHORIZATION, token))
-				.andExpect(status().isCreated()).andExpect(header().exists("Location")).andExpect(content().json(json))
+		mvc.perform(post("/autores").contentType(MediaType.APPLICATION_JSON).content(json)
+				.header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isCreated())
+				.andExpect(header().exists("Location")).andExpect(content().json(json))
 				.andExpect(jsonPath("$.id").exists());
 	}
 
