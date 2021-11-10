@@ -16,10 +16,14 @@ jobs:
           POSTGRES_DB: livraria_test
         ports:
           # will assign a random free host port
-          - 5432/tcp
+          - 5432/5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
+    env:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_PASSWORD: AMam@!12
+      POSTGRES_USER: postgres
     steps:
       - uses: actions/checkout@v2
       
@@ -33,13 +37,8 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Connect to PostgreSQL
-        env:
-          # The hostname used to communicate with the PostgreSQL service container
-          POSTGRES_HOST: localhost
-          # The default PostgreSQL port
-          POSTGRES_PORT: 5432
+          restore-keys: ${{ runner.os }}-m2	  
+		  
       - name: Executar os testes
         run: mvn clean test --file pom.xml
      
