@@ -77,10 +77,10 @@ public class AutorControllerTest {
 	void deveriaCadastrarUmAutorComDadosCompletos() throws Exception {
 		String json = objectMapper.writeValueAsString(AutorFactory.criarAutorFormDto());
 
-		mvc.perform(post("/autores").contentType(MediaType.APPLICATION_JSON).content(json)
-				.header(HttpHeaders.AUTHORIZATION, token)).andExpect(status().isCreated())
-				.andExpect(header().exists("Location")).andExpect(content().json(json))
-				.andExpect(jsonPath("$.id").exists());
+       mvc.perform(post("/autores").header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(header().exists("Location"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.id").exists());
+
 	}
 
 }

@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.desafio.livraria.mocks.AutorFactory;
 import br.desafio.livraria.modelo.Autor;
-import lombok.var;
+
 
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 
@@ -42,7 +42,7 @@ public class AutorRepositoryTest {
 
 	    @Test
 	    void findByEmailDeveriaRetornarUmAutorValido() {
-	        var autorEncontrado = autorRepository.findByEmail(autor.getEmail());
+	        Autor autorEncontrado = autorRepository.findByEmail(autor.getEmail());
 
 	        assertEquals(autor.getId(), autorEncontrado.getId());
 	        assertEquals(autor.getEmail(), autorEncontrado.getEmail());
@@ -51,7 +51,7 @@ public class AutorRepositoryTest {
 
 	    @Test
 	    void findByNaoDeveriaTerRetornoComEmailNaoCadastrado() {
-	        var autorEncontrado = autorRepository.findByEmail("any@mail.com");
+	        Autor autorEncontrado = autorRepository.findByEmail("any@mail.com");
 
 	        assertNull(autorEncontrado);
 	    }
