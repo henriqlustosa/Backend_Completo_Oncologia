@@ -51,7 +51,7 @@ public class RelatorioControllerTest {
 	private Long user_id;
 	@BeforeEach
 	void setUp() {
-		usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123");
+		usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123","henriqlustosa@outlook.com");
         usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
 		Usuario usuarioSaved =usuarioRepository.save(usuario);
 		user_id = usuarioSaved.getId();

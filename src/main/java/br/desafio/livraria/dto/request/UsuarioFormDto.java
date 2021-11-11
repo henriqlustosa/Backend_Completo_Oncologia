@@ -1,4 +1,5 @@
 package br.desafio.livraria.dto.request;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -23,5 +24,7 @@ public class UsuarioFormDto {
 	    @NotNull
 	    @JsonProperty("perfil_id")
 	    private Long perfilId;
-
+	    @NotBlank
+	    @Email
+	    private String email;
 }

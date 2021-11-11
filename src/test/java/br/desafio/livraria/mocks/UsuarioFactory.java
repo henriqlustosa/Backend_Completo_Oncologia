@@ -13,14 +13,14 @@ public class UsuarioFactory {
 	    
 	   
 		public static Usuario criarUsuario() {
-			Usuario usuario = new Usuario(1L, "Henrique Lustosa", "henriqlustosa", "123456");
+			Usuario usuario = new Usuario(1L, "Henrique Lustosa", "henriqlustosa", "123456","henriqlustosa@gmail.com");
 			usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
 			return usuario;
 	    }
 
 		
 	    public static Usuario criarUsuarioSemId() {
-	    	Usuario usuario = new Usuario(null, "Henrique Lustosa", "henriqlustosa", "123456");
+	    	Usuario usuario = new Usuario(null, "Henrique Lustosa", "henriqlustosa", "123456","henriqlustosa@gmail.com");
 	    	usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
 			return usuario;
 	    }
@@ -35,13 +35,13 @@ public class UsuarioFactory {
 	        return modelMapper.map(criarUsuario(), UsuarioDto.class);
 	    }
 	    public static UsuarioUpdateFormDto criarUsuarioUpdateFormComMesmoLoginDto() {
-	        Usuario usuario = new Usuario(1L, "Updated Henrique Lustosa", "henriqlustosa", "123456");
+	        Usuario usuario = new Usuario(1L, "Updated Henrique Lustosa", "henriqlustosa", "123456","henriqlustosa@gmail.com");
 
 	        return modelMapper.map(usuario, UsuarioUpdateFormDto.class);
 	    }
 
 	    public static UsuarioUpdateFormDto criarUsuarioUpdateFormComLoginDiferenteDto() {
-	        Usuario usuario = new Usuario(1L, "Updated Henrique Lustosa", "updatedmail", "123456");
+	        Usuario usuario = new Usuario(1L, "Updated Henrique Lustosa", "updatedmail", "123456","henriqlustosa@gmail.com");
 
 	        return modelMapper.map(usuario, UsuarioUpdateFormDto.class);
 	    }

@@ -20,6 +20,7 @@ import br.desafio.livraria.dto.request.UsuarioUpdateFormDto;
 import br.desafio.livraria.dto.response.UsuarioDto;
 import br.desafio.livraria.exception.DomainException;
 import br.desafio.livraria.exception.ResourceNotFoundException;
+import br.desafio.livraria.infra.EnviadorDeEmail;
 import br.desafio.livraria.modelo.Usuario;
 import br.desafio.livraria.repository.PerfilRepository;
 import br.desafio.livraria.repository.UsuarioRepository;
@@ -37,6 +38,9 @@ public class UsuarioService {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private ModelMapper modelMapper;
+
+    @Autowired
+    private EnviadorDeEmail enviadorDeEmail;
 
 	public Page<UsuarioDto> getUsuarios(Pageable paginacao) {
 		Page<Usuario> usuarios = usuarioRepository.findAll(paginacao);
@@ -56,6 +60,16 @@ public class UsuarioService {
 		String senha = gerarSenha();
 		usuarioToSave.setSenha(bCryptPasswordEncoder.encode(senha));
 		Usuario savedUsuario = usuarioRepository.save(usuarioToSave);
+		
+		String destinatario = savedUsuario.getLogin();
+        String assunto = "Carteira - Boas vindas";
+        String mensagem = String.format("Olá %s!\n\n Aqui estão seus dados de acesso ao sistema Carteira:" +
+                "\nLogin:%s\nSenha:%s",
+                savedUsuario.getNome(), savedUsuario.getLogin(), senha);
+
+        enviadorDeEmail.enviarEmail(destinatario, assunto, mensagem);
+		
+		
 		
 		return modelMapper.map(savedUsuario,  UsuarioDto.class);
 		

@@ -98,7 +98,7 @@ public class LivroControllerTest {
 
     @BeforeEach
     void setUp() {
-    	usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123");
+    	usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123","henriqlustosa@outlook.com");
         usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
     	usuarioLogado= usuarioRepository.save(usuario);
     	

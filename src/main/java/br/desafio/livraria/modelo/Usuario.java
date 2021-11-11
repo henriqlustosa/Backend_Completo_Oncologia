@@ -43,6 +43,7 @@ public class Usuario implements UserDetails {
 	private String nome;
 	private String login;
 	private String senha;
+    private String email;
 
 	@ManyToMany
 	@JoinTable(name = "perfis_usuarios", joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"
@@ -52,11 +53,12 @@ public class Usuario implements UserDetails {
 	))
 	private List<Perfil> perfis = new ArrayList<>();
 
-    public Usuario(Long id, String nome, String login, String senha) {
+    public Usuario(Long id, String nome, String login, String senha,String email) {
         this.id = id;
         this.nome = nome;
         this.login = login;
         this.senha = senha;
+        this.email= email;
     }
 
 	public void atualizarInformacoes(String nome, String login) {
