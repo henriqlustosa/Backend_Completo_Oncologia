@@ -17,12 +17,14 @@ import br.desafio.livraria.dto.request.UsuarioFormDto;
 import br.desafio.livraria.dto.request.UsuarioUpdateFormDto;
 import br.desafio.livraria.exception.DomainException;
 import br.desafio.livraria.exception.ResourceNotFoundException;
+import br.desafio.livraria.infra.EnviadorDeEmail;
 import br.desafio.livraria.mocks.UsuarioFactory;
 import br.desafio.livraria.modelo.Usuario;
 import br.desafio.livraria.repository.PerfilRepository;
 import br.desafio.livraria.repository.UsuarioRepository;
 
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,6 +50,10 @@ public class UsuarioServiceTest {
 	
 	@Mock
 	private UsuarioRepository usuarioRepository ;
+	
+	@Mock
+	private EnviadorDeEmail enviadorDeEmail ;
+	
 	
 	@InjectMocks
 	private UsuarioService usuarioService;
@@ -136,6 +142,8 @@ public class UsuarioServiceTest {
     	when(usuarioRepository.save(Mockito.any(Usuario.class))).thenAnswer(i -> i.getArguments()[0]);
         when(modelMapper.map(usuarioFormDto, Usuario.class)).thenReturn(usuario);
         when(modelMapper.map(usuario, UsuarioDto.class)).thenReturn(usuarioDto);
+        doNothing().when(enviadorDeEmail).enviarEmail(any(), any(), any());
+       
         UsuarioDto usuarioResponseDto = usuarioService.createUsuario(usuarioFormDto);
 
         assertEquals(usuarioFormDto.getNome(), usuarioResponseDto.getNome());
