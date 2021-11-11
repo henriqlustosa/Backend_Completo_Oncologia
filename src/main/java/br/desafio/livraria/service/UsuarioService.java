@@ -61,7 +61,7 @@ public class UsuarioService {
 		usuarioToSave.setSenha(bCryptPasswordEncoder.encode(senha));
 		Usuario savedUsuario = usuarioRepository.save(usuarioToSave);
 		
-		String destinatario = savedUsuario.getLogin();
+		String destinatario = savedUsuario.getEmail();
         String assunto = "Carteira - Boas vindas";
         String mensagem = String.format("Olá %s!\n\n Aqui estão seus dados de acesso ao sistema Carteira:" +
                 "\nLogin:%s\nSenha:%s",
