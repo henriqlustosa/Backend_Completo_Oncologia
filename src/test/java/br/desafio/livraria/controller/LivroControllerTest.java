@@ -28,6 +28,7 @@ import br.desafio.livraria.mocks.LivroFactory;
 import br.desafio.livraria.mocks.UsuarioFactory;
 import br.desafio.livraria.modelo.Autor;
 import br.desafio.livraria.modelo.Livro;
+import br.desafio.livraria.modelo.Perfil;
 import br.desafio.livraria.modelo.Usuario;
 import br.desafio.livraria.repository.AutorRepository;
 import br.desafio.livraria.repository.LivroRepository;
@@ -97,7 +98,8 @@ public class LivroControllerTest {
 
     @BeforeEach
     void setUp() {
-    	usuario = UsuarioFactory.criarUsuarioSemId();
+    	usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123");
+        usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
     	usuarioLogado= usuarioRepository.save(usuario);
     	
 		Authentication authentication = new UsernamePasswordAuthenticationToken(usuarioLogado, usuarioLogado.getLogin());

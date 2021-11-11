@@ -39,6 +39,7 @@ import org.springframework.security.core.Authentication;
 @ActiveProfiles("test")
 @Transactional
 public class AutorControllerTest {
+	
 
 	@Autowired
 	private MockMvc mvc;
@@ -55,12 +56,15 @@ public class AutorControllerTest {
 	private String token;
 
 	private Usuario usuario;
+    private Usuario usuarioLogado ;
 
 	@BeforeEach
 	void setUp() {
-		usuario = UsuarioFactory.criarUsuarioSemId();
-		usuarioRepository.save(usuario);
-		Authentication authentication = new UsernamePasswordAuthenticationToken(usuario, usuario.getLogin());
+		usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123");
+        usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
+    	usuarioLogado= usuarioRepository.save(usuario);
+    	
+		Authentication authentication = new UsernamePasswordAuthenticationToken(usuarioLogado, usuarioLogado.getLogin());
 
 		this.token = "Bearer " + tokenService.gerarToken(authentication);
 	}

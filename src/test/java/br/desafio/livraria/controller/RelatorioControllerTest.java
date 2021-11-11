@@ -22,6 +22,7 @@ import com.jayway.jsonpath.JsonPath;
 
 import br.desafio.livraria.infra.security.TokenService;
 import br.desafio.livraria.mocks.UsuarioFactory;
+import br.desafio.livraria.modelo.Perfil;
 import br.desafio.livraria.modelo.Usuario;
 import br.desafio.livraria.repository.UsuarioRepository;
 
@@ -50,7 +51,8 @@ public class RelatorioControllerTest {
 	private Long user_id;
 	@BeforeEach
 	void setUp() {
-		usuario = UsuarioFactory.criarUsuarioSemId();
+		usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123");
+        usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
 		Usuario usuarioSaved =usuarioRepository.save(usuario);
 		user_id = usuarioSaved.getId();
 		Authentication authentication = new UsernamePasswordAuthenticationToken(usuario, usuario.getLogin());

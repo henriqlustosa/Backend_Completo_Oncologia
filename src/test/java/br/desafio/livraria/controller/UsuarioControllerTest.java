@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.desafio.livraria.dto.response.UsuarioDto;
 import br.desafio.livraria.infra.security.TokenService;
 import br.desafio.livraria.mocks.UsuarioFactory;
-
+import br.desafio.livraria.modelo.Perfil;
 import br.desafio.livraria.modelo.Usuario;
 
 import br.desafio.livraria.repository.UsuarioRepository;
@@ -55,7 +55,8 @@ public class UsuarioControllerTest {
    
     @BeforeEach
     void setUp() {
-    	usuario = UsuarioFactory.criarUsuarioSemId();
+    	usuario = new Usuario(null, "Admin", "admin@mail.com", "SuperSecret123");
+        usuario.adicionarPerfil(new Perfil(1l,"ROLE_ADMIN"));
     	usuarioLogado= usuarioRepository.save(usuario);
     	
 		Authentication authentication = new UsernamePasswordAuthenticationToken(usuarioLogado, usuarioLogado.getLogin());

@@ -23,7 +23,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @ActiveProfiles("test")
-
 public class AutorRepositoryTest {
 	 @Autowired
 	    private AutorRepository autorRepository;
